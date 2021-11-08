@@ -8,9 +8,10 @@
 
     <ListView
         android:id="@+id/list1"
-        android:layout_width="410dp"
+        android:layout_width="wrap_content"
         android:layout_height="381dp"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:clickable="true"/>
 
     <LinearLayout
         android:layout_width="412dp"
