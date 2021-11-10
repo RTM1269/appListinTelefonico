@@ -4,10 +4,14 @@ import static android.view.Gravity.CENTER;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +36,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private ArrayList<Persona> listapersonas;
+    final int MY_PERMISSIONS_REQUEST_CALL_PHONE=10;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +64,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(MainActivity.this,listapersonas.get(i).getNombre(), Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this,listapersonas.get(i).getNombre(), Toast.LENGTH_SHORT).show();
+                Log.d("item: ", listapersonas.get(i).getNumero().toString());
+                if(ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED){
+                    // Aquí ya está concedido, procede a realizar lo que tienes que hacer
+                    Intent my = new Intent(Intent.ACTION_CALL);
+                    my.setData(Uri.parse("tel:"+listapersonas.get(i).getNumero()));
+                    startActivity(my);
+                    Log.d("dentro if", "dentro if");
+                }else{
+                    // Aquí lanzamos un dialog para que el usuario confirme si permite o no el realizar llamadas
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{ Manifest.permission.CALL_PHONE}, MY_PERMISSIONS_REQUEST_CALL_PHONE);
+                    Log.d("dentro if", "dentro else");
+                }
+                Log.d("dentro if", "dentro fuera if");
             }
         });
 
@@ -109,8 +127,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Toast.makeText(MainActivity.this,listapersonas.get(i).getNombre(), Toast.LENGTH_SHORT).show();
-                Intent my = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+listapersonas.get(i).getNumero()));
-                startActivity(my);
+                Log.d("item: ", listapersonas.get(i).getNumero().toString());
+                if(ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED){
+                    // Aquí ya está concedido, procede a realizar lo que tienes que hacer
+                    Intent my = new Intent(Intent.ACTION_CALL);
+                    my.setData(Uri.parse("tel:"+listapersonas.get(i).getNumero()));
+                    startActivity(my);
+                    Log.d("dentro if", "dentro if");
+                }else{
+                    // Aquí lanzamos un dialog para que el usuario confirme si permite o no el realizar llamadas
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{ Manifest.permission.CALL_PHONE}, MY_PERMISSIONS_REQUEST_CALL_PHONE);
+                    Log.d("dentro if", "dentro else");
+                }
+                Log.d("dentro if", "dentro fuera if");
+                /*if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                    Log.i("Mensaje", "No se tiene permiso para realizar llamadas telefónicas.");
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 225);
+                    Intent my = new Intent(Intent.ACTION_DIAL);
+                    my.setData(Uri.parse("tel:"+listapersonas.get(i).getNumero()));
+                    startActivity(my);
+                } else {
+                    Log.i("Mensaje", "Se tiene permiso!");
+                    ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.CALL_PHONE},MY_PERMISSIONS_REQUEST_CALL_PHONE);
+                }*/
             }
         });
 
